@@ -1,0 +1,111 @@
+model User {
+  id String @id @default(uuid(7)) @db.Uuid
+
+  // -------------- Aditional fields - START --------------
+  names     String  @map("names")
+  lastNames String? @map("last_names")
+  // -------------- Aditional fields - END ----------------
+
+  /// `name` from better-auth
+  displayName         String?   @map("display_name")
+  /// `image` from better-auth
+  imageUrl            String?   @map("image_url")
+  email               String
+  emailVerified       Boolean   @default(false) @map("email_verified")
+  // --------- better-auth's `phoneNumber` plugin - START -------------
+  phoneNumber         String?   @map("phone_number")
+  phoneNumberVerified Boolean   @default(false) @map("phone_number_verified")
+  // --------- better-auth's `phoneNumber` plugin - END ---------------
+  // --------- better-auth's `admin` plugin - START -------------
+  /// A user can have multiple roles. Multiple roles are stored as string separated by comma (",").
+  role                String    @default("user")
+  banned              Boolean   @default(false)
+  banReason           String?   @map("ban_reason")
+  banExpires          DateTime? @map("ban_expires")
+  // --------- better-auth's `admin` plugin - END ---------------
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  sessions             Session[] @relation("user")
+  impersonatedSessions Session[] @relation("impersonated")
+  accounts             Account[]
+
+  @@map("user")
+}
+
+model Session {
+  id String @id @default(uuid(7)) @db.Uuid
+
+  userId String @map("user_id") @db.Uuid
+  user   User   @relation("user", fields: [userId], references: [id])
+
+  /// The unique session token
+  token              String
+  /// The time when the session expires
+  expiresAt          DateTime @map("expires_at") @db.Timestamptz(3)
+  /// The IP address of the device
+  ipAddress          String?  @map("ip_address")
+  /// The user agent information of the device
+  userAgent          String?  @map("user_agent")
+  // --------- better-auth's `admin` plugin - START -------------
+  impersonatedBy     String?  @map("impersonated_by") @db.Uuid
+  impersonatedByUser User?    @relation("impersonated", fields: [impersonatedBy], references: [id])
+  // --------- better-auth's `admin` plugin - END ---------------
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@unique([token])
+  @@index([userId, token])
+  @@map("session")
+}
+
+model Account {
+  id String @id @default(uuid(7)) @db.Uuid
+
+  userId String @map("user_id") @db.Uuid
+  user   User   @relation(fields: [userId], references: [id])
+
+  /// The ID of the account as provided by the SSO or equal to userId for credential accounts
+  accountId             String    @map("account_id")
+  /// The ID of the provider
+  providerId            String    @map("provider_id")
+  /// The access token of the account. Returned by the provider
+  accessToken           String?   @map("access_token")
+  /// The refresh token of the account. Returned by the provider
+  refreshToken          String?   @map("refresh_token")
+  /// The time when the access token expires
+  accessTokenExpiresAt  DateTime? @map("access_token_expires_at") @db.Timestamptz(3)
+  /// 	The time when the refresh token expires
+  refreshTokenExpiresAt DateTime? @map("refresh_token_expires_at") @db.Timestamptz(3)
+  /// The scope of the account. Returned by the provider
+  scope                 String?   @map("scope")
+  /// The ID token returned from the provider
+  idToken               String?   @map("id_token")
+  /// The password of the account. Mainly used for email and password authentication
+  password              String?   @map("password")
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id String @id @default(uuid(7)) @db.Uuid
+
+  /// The identifier for the verification request
+  identifier String
+  ///The value to be verified
+  value      String
+  /// The time when the verification request expires
+  expiresAt  DateTime @map("expires_at") @db.Timestamptz(3)
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@index([identifier])
+  @@map("verification")
+}

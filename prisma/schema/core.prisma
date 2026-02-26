@@ -1,0 +1,20 @@
+model Todo {
+  id String @id @default(uuid(7)) @db.Uuid
+
+  title       String
+  description String
+  status      TodoStatus
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@map("todo")
+}
+
+enum TodoStatus {
+  DONE
+  IN_PROGRESS
+  PENDING
+
+  @@map("todo_status")
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "singleQuote": false,
+  "tabWidth": 2,
+  "useTabs": false,
+  "printWidth": 100,
+  "arrowParens": "always",
+  "bracketSpacing": true,
+  "jsxSingleQuote": false,
+  "semi": true,
+  "experimentalTailwindcss": {
+    "stylesheet": "./src/styles/globals.css",
+    "functions": ["clsx", "cn", "cva"]
+  },
+  "experimentalSortPackageJson": false,
+  "experimentalSortImports": {
+    "internalPattern": ["@/"]
+  },
+  "ignorePatterns": [".output", "pnpm-lock.yaml", "routeTree.gen.ts", "src/server/db/generated"]
+}
