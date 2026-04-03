@@ -1,13 +1,11 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": null,
   "categories": {
     "correctness": "warn"
   },
   "rules": {},
   "settings": {
     "jsx-a11y": {
-      "polymorphicPropName": null,
       "components": {},
       "attributes": {}
     },
@@ -17,7 +15,6 @@
     "react": {
       "formComponents": [],
       "linkComponents": [],
-      "version": null,
       "componentWrapperFunctions": []
     },
     "jsdoc": {
@@ -38,5 +35,5 @@
     "builtin": true
   },
   "globals": {},
-  "ignorePatterns": [".output", "pnpm-lock.yaml", "routeTree.gen.ts", "src/server/db/generated"]
+  "ignorePatterns": [".output", "bun.lock", "routeTree.gen.ts", "src/server/db/generated"]
 }

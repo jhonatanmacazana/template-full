@@ -16,5 +16,5 @@
   "experimentalSortImports": {
     "internalPattern": ["@/"]
   },
-  "ignorePatterns": [".output", "pnpm-lock.yaml", "routeTree.gen.ts", "src/server/db/generated"]
+  "ignorePatterns": [".output", "bun.lock", "routeTree.gen.ts", "src/server/db/generated"]
 }
