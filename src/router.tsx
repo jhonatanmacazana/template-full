@@ -3,12 +3,16 @@ import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query
 
 import { routeTree } from "./routeTree.gen";
 import * as TRPCOptions from "./trpc/setup";
+import { DefaultCatchBoundary } from "./components/default-catch-boundary";
+import { NotFound } from "./components/not-found";
 
 export function getRouter() {
   const router = createTanStackRouter({
     routeTree,
     context: { ...TRPCOptions.getContext() },
     defaultPreload: "intent",
+    defaultErrorComponent: DefaultCatchBoundary,
+    defaultNotFoundComponent: () => <NotFound />,
     scrollRestoration: true,
     Wrap: (props: { children: React.ReactNode }) => {
       return <TRPCOptions.Provider>{props.children}</TRPCOptions.Provider>;
