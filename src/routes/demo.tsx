@@ -51,9 +51,9 @@ function DemoPage() {
     <div className="mx-auto max-w-2xl space-y-8 p-8">
       <div>
         <h1 className="text-2xl font-bold">tRPC Demo</h1>
-        <p className="text-muted-foreground text-sm">
+        <p className="text-sm text-muted-foreground">
           query + mutations via{" "}
-          <code className="bg-muted rounded px-1 py-0.5 font-mono text-xs">
+          <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">
             @trpc/tanstack-react-query
           </code>
         </p>
@@ -103,11 +103,11 @@ function TodoList() {
   }
 
   if (todosQuery.error) {
-    return <p className="text-muted-foreground text-sm">Error: {todosQuery.error.message}</p>;
+    return <p className="text-sm text-muted-foreground">Error: {todosQuery.error.message}</p>;
   }
 
   if (todosQuery.data.length === 0) {
-    return <p className="text-muted-foreground text-sm">No todos yet. Create one below.</p>;
+    return <p className="text-sm text-muted-foreground">No todos yet. Create one below.</p>;
   }
 
   return (
@@ -153,7 +153,7 @@ function TodoCard({
 
         {todo.description && (
           <CardContent className="pb-2">
-            <p className="text-muted-foreground text-sm">{todo.description}</p>
+            <p className="text-sm text-muted-foreground">{todo.description}</p>
           </CardContent>
         )}
 
@@ -207,7 +207,7 @@ function CreateTodoForm() {
   const createMutation = useMutation(
     trpc.todo.create.mutationOptions({
       onSuccess: () => {
-        queryClient.invalidateQueries(trpc.todo.getAll.pathFilter());
+        void queryClient.invalidateQueries(trpc.todo.getAll.pathFilter());
         setTitle("");
         setDescription("");
         setStatus("PENDING");
@@ -266,7 +266,7 @@ function CreateTodoForm() {
       </Button>
 
       {createMutation.isError && (
-        <p className="text-destructive text-sm">{createMutation.error.message}</p>
+        <p className="text-sm text-destructive">{createMutation.error.message}</p>
       )}
     </form>
   );

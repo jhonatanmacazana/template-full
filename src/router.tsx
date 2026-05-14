@@ -1,10 +1,10 @@
 import { createRouter as createTanStackRouter } from "@tanstack/react-router";
 import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
 
-import { routeTree } from "./routeTree.gen";
-import * as TRPCOptions from "./trpc/setup";
 import { DefaultCatchBoundary } from "./components/default-catch-boundary";
 import { NotFound } from "./components/not-found";
+import { routeTree } from "./routeTree.gen";
+import * as TRPCOptions from "./trpc/setup";
 
 export function getRouter() {
   const router = createTanStackRouter({
