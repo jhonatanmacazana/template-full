@@ -2,9 +2,10 @@ import type { QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { createRootRouteWithContext, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import { createServerFn } from "@tanstack/react-start";
+import { createMiddleware, createServerFn } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
 import type { TRPCOptionsProxy } from "@trpc/tanstack-react-query";
+import { evlogErrorHandler } from "evlog/nitro/v3";
 import type { ReactNode } from "react";
 
 import { ThemeProvider, useTheme } from "@/components/theme-provider";
@@ -27,6 +28,9 @@ export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
   trpc: TRPCOptionsProxy<AppRouter>;
 }>()({
+  server: {
+    middleware: [createMiddleware().server(evlogErrorHandler)],
+  },
   head: () => ({
     meta: [
       {

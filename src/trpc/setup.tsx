@@ -3,10 +3,11 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import { createTRPCClient, httpBatchStreamLink } from "@trpc/client";
+import { createTRPCClient, httpBatchLink, httpLink, loggerLink, splitLink } from "@trpc/client";
 import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
 import SuperJSON from "superjson";
 
+import { env } from "@/env";
 import type { AppRouter } from "@/server/api/root";
 
 import { TRPCProvider } from "./react";
@@ -36,9 +37,26 @@ function getBaseUrl() {
 
 export const trpcClient = createTRPCClient<AppRouter>({
   links: [
-    httpBatchStreamLink({
-      transformer: SuperJSON,
-      url: `${getBaseUrl()}/api/trpc`,
+    loggerLink({
+      enabled: (opts) =>
+        env.VITE_ENV !== "production" ||
+        (opts.direction === "down" && opts.result instanceof Error),
+    }),
+    splitLink({
+      condition(op) {
+        // check for context property `skipBatch`
+        return op.context["skipBatch"] === true;
+      },
+      // when condition is true, use normal request
+      true: httpLink({
+        transformer: SuperJSON,
+        url: `${getBaseUrl()}/api/trpc`,
+      }),
+      // when condition is false, use batching
+      false: httpBatchLink({
+        transformer: SuperJSON,
+        url: `${getBaseUrl()}/api/trpc`,
+      }),
     }),
   ],
 });

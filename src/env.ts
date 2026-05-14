@@ -16,12 +16,15 @@ export const env = createEnv({
     BETTER_AUTH_URL: z.string().url(),
   },
   clientPrefix: "VITE_",
-  client: {},
+  client: {
+    VITE_ENV: z.enum(["development", "test", "production"]).default("development"),
+  },
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
     BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
+    VITE_ENV: import.meta.env.VITE_ENV,
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
   emptyStringAsUndefined: true,
